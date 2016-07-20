@@ -1,0 +1,94 @@
+jQuery(document).ready(function($) {
+
+    var map;
+    var pokemons = {};
+
+    function initMap(position) {
+        console.log(position)
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: position.coords.latitude, lng: position.coords.longitude},
+            zoom: 18
+        });
+        setup_websocket();
+        startUpdate();
+        setInterval(startUpdate,20*1000)
+    }
+
+    function setup_websocket() {
+        var ws4redis = WS4Redis({
+            uri: 'ws://127.0.0.1:8000/ws/wild_pokemon?subscribe-broadcast&publish-broadcast&echo',
+            receive_message: receiveMessage,
+            heartbeat_msg: '--skip--'
+        });
+    }
+
+    //ws4redis.send_message($('#text_message').val());
+
+	// receive a message though the Websocket from the server
+	function receiveMessage(msg) {
+        var data = JSON.parse(msg)
+        console.log('[data received]')
+        for(var i = 0; i < data.length;i++){
+            var pokemon = data[i];
+            if(!pokemons[pokemon.encounter_id]){
+                addMarker(pokemon);
+                pokemons[pokemon.encounter_id] = true
+            }
+            else{
+                console.log('duplicate received')
+            }
+        }
+	}
+
+    function getPokemonData(data,marker){
+        var id = data.pokemon_data.pokemon_id;
+        console.log('Getting Data for #' + id)
+        $.ajax({
+            url:'https://pokeapi.co/api/v2/pokemon/'+ id +'/',
+            success: function (response) {
+                console.log('Received Data for #' + id + ' ' + response.name)
+                marker.setTitle(response.name);
+                var image = {
+                    url: response.sprites.front_default,
+                    // This marker is 20 pixels wide by 32 pixels high.
+                    size: new google.maps.Size(96, 96),
+                    // The anchor for this image is the base of the flagpole at (0, 32).
+                    anchor: new google.maps.Point(48, 48)
+                };
+
+                marker.setIcon(image);
+            }
+        });
+    }
+
+    function addMarker(data){
+        var marker = new google.maps.Marker({
+            position: {lng:data.longitude,lat:data.latitude},
+            title: data.pokemon_data.pokemon_id.toString()
+        });
+        marker.setMap(map);
+        setTimeout(function () {
+            removeMarker(data,marker)
+        },data.time_till_hidden_ms);
+
+        getPokemonData(data,marker)
+    }
+
+    function removeMarker(data,marker){
+        console.log('removed marker for #' + data.pokemon_data.pokemon_id);
+        marker.setMap(null);
+        marker = null;
+    }
+
+    function startUpdate(){
+        $.ajax('/pokeworld/test/?latitude=position.coords.latitude&longitude=position.coords.longitude')
+    }
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(initMap)
+    }
+    else {
+        initMap({coords:{latitude:0,longitude:0}});
+    }
+
+});
