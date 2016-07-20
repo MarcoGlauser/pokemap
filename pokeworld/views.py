@@ -62,8 +62,9 @@ def parse_wild_pokemon(response_dict):
     wild_pokemons = []
     for s2_cell in response_dict['responses']['GET_MAP_OBJECTS']['map_cells']:
         if s2_cell.get('wild_pokemons'):
+            print ('Wild Pokemon found!')
             for wild_pokemon in s2_cell.get('wild_pokemons'):
-                print wild_pokemon['pokemon_data']['pokemon_id']
+                print '#' + wild_pokemon['pokemon_data']['pokemon_id']
                 wild_pokemons.append(wild_pokemon)
 
     return wild_pokemons

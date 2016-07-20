@@ -1,1 +1,1 @@
-web: gunicorn pokemap.wsgi
+web: uwsgi pokemap/uwsgi.ini

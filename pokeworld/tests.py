@@ -23,6 +23,4 @@ class asdasdTest(TestCase):
                 current_step = counter
             degrees.append(current_degree)
             current_step -= 1
-
-
         print degrees

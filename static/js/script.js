@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
 
     function setup_websocket() {
         var ws4redis = WS4Redis({
-            uri: 'ws://127.0.0.1:8000/ws/wild_pokemon?subscribe-broadcast&publish-broadcast&echo',
+            uri: 'wss://'+ window.location.host+'/ws/wild_pokemon?subscribe-broadcast&publish-broadcast&echo',
             receive_message: receiveMessage,
             heartbeat_msg: '--skip--'
         });
@@ -48,8 +48,9 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 console.log('Received Data for #' + id + ' ' + response.name)
                 marker.setTitle(response.name);
+                spriteUrl = response.sprites.front_default.replace(/^http:\/\//i, 'https://');
                 var image = {
-                    url: response.sprites.front_default,
+                    url: spriteUrl,
                     // This marker is 20 pixels wide by 32 pixels high.
                     size: new google.maps.Size(96, 96),
                     // The anchor for this image is the base of the flagpole at (0, 32).
@@ -81,7 +82,10 @@ jQuery(document).ready(function($) {
     }
 
     function startUpdate(){
-        $.ajax('/pokeworld/test/?latitude=position.coords.latitude&longitude=position.coords.longitude')
+        random_component = Math.floor((Math.random() * 10*1000) + 1);
+        setTimeout(function () {
+            $.ajax('/pokeworld/test/?latitude=position.coords.latitude&longitude=position.coords.longitude')
+        },random_component)
     }
 
     if (navigator.geolocation) {
