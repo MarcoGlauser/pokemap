@@ -8,8 +8,8 @@ jQuery(document).ready(function($) {
     function initMap() {
         console.log('lat: '+ position.coords.latitude+ ' lng:'+position.coords.longitude)
         map = new google.maps.Map(document.getElementById('map'), {
-            center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-            zoom: 18
+            center: {lat:position.coords.latitude,lng:position.coords.longitude},
+            zoom: 10
         });
     }
 
@@ -30,6 +30,10 @@ jQuery(document).ready(function($) {
         positionMarker.setIcon(image);
         positionMarker.setMap(map);
         console.log(map.getCenter())
+        console.log(map.getCenter().toString())
+        console.log(map.getCenter().latitude)
+        console.log(map.getCenter().longitude)
+        console.log(map.getCenter().toString())
         map.setCenter(positionMarker.getPosition())
     }
 
