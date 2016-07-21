@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 
         positionMarker.setIcon(image);
         positionMarker.setMap(map);
-        console.log(maps.getCenter())
+        console.log(map.getCenter())
         map.setCenter(positionMarker.getPosition())
     }
 
