@@ -121,13 +121,14 @@ jQuery(document).ready(function($) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (initPosition) {
             position = initPosition;
+            initMap();
+            setupPositionMarker();
+            //setup_websocket();
+            //startUpdate();
+            //setInterval(startUpdate,30*1000);
          });
 
-        initMap();
-        setupPositionMarker();
-        //setup_websocket();
-        //startUpdate();
-        //setInterval(startUpdate,30*1000);
+
 
         navigator.geolocation.watchPosition(updatePosition);
     }
