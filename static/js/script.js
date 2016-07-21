@@ -5,15 +5,15 @@ jQuery(document).ready(function($) {
     var position = {};
     var positionMarker;
 
-    function initMap(initPosition) {
+    function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: initPosition.coords.latitude, lng: initPosition.coords.longitude},
+            center: {lat: position.coords.latitude, lng: position.coords.longitude},
             zoom: 18
         });
         setupPositionMarker();
-        /*setup_websocket();
+        setup_websocket();
         startUpdate();
-        setInterval(startUpdate,50*1000)*/
+        setInterval(startUpdate,60*1000)
     }
 
     function setupPositionMarker(){
@@ -25,9 +25,9 @@ jQuery(document).ready(function($) {
         var image = {
             url: '/static/images/pokeball.png',
             // This marker is 20 pixels wide by 32 pixels high.
-            size: new google.maps.Size(96, 96),
+            size: new google.maps.Size(48, 48),
             // The anchor for this image is the base of the flagpole at (0, 32).
-            anchor: new google.maps.Point(48, 48)
+            anchor: new google.maps.Point(24, 24)
         };
 
         positionMarker.setIcon(image);
@@ -36,6 +36,7 @@ jQuery(document).ready(function($) {
     }
 
     function updatePositionMarker() {
+        map.setCenter({lat:position.coords.latitude,lng:position.coords.longitude});
         positionMarker.setPosition({lat:position.coords.latitude,lng:position.coords.longitude})
     }
 
@@ -77,9 +78,9 @@ jQuery(document).ready(function($) {
                 var image = {
                     url: spriteUrl,
                     // This marker is 20 pixels wide by 32 pixels high.
-                    size: new google.maps.Size(48, 48),
+                    size: new google.maps.Size(96, 96),
                     // The anchor for this image is the base of the flagpole at (0, 32).
-                    anchor: new google.maps.Point(24, 24)
+                    anchor: new google.maps.Point(48, 48)
                 };
 
                 marker.setIcon(image);
@@ -123,7 +124,7 @@ jQuery(document).ready(function($) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (initPosition) {
             position = initPosition;
-            initMap(initPosition)
+            initMap()
         });
         navigator.geolocation.watchPosition(updatePosition);
     }
