@@ -32,11 +32,11 @@ jQuery(document).ready(function($) {
 
         positionMarker.setIcon(image);
         positionMarker.setMap(map);
+        map.setCenter(positionMarker.getPosition())
         console.log('set on map')
     }
 
     function updatePositionMarker() {
-        map.setCenter({lat:position.coords.latitude,lng:position.coords.longitude});
         positionMarker.setPosition({lat:position.coords.latitude,lng:position.coords.longitude})
     }
 
