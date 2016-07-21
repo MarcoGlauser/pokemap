@@ -22,7 +22,7 @@ jQuery(document).ready(function($) {
         });
     }
 
-    function setupPositionMarker(){
+    function setupPositionMarker(position){
         console.log('lat: '+ position.coords.latitude+ ' lng:'+position.coords.longitude)
         positionMarker = new google.maps.Marker({
             position: {lat:position.coords.latitude,lng:position.coords.longitude},
@@ -133,7 +133,7 @@ jQuery(document).ready(function($) {
         navigator.geolocation.getCurrentPosition(function (initPosition) {
             position = initPosition;
             initMap(initPosition);
-            setupPositionMarker();
+            setupPositionMarker(initPosition);
             //setup_websocket();
             //startUpdate();
             //setInterval(startUpdate,30*1000);
