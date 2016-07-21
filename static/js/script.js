@@ -13,7 +13,7 @@ jQuery(document).ready(function($) {
         setupPositionMarker();
         setup_websocket();
         startUpdate();
-        setInterval(startUpdate,60*1000)
+        setInterval(startUpdate,30*1000)
     }
 
     function setupPositionMarker(){
