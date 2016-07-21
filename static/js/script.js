@@ -5,11 +5,20 @@ jQuery(document).ready(function($) {
     var position = {};
     var positionMarker;
 
-    function initMap() {
-        console.log('lat: '+ position.coords.latitude+ ' lng:'+position.coords.longitude)
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat:position.coords.latitude,lng:position.coords.longitude},
-            zoom: 10
+    function initMap(position) {
+        var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+        var options = {
+            zoom: 17,
+            center: coords,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById("map"), options);
+
+        var marker = new google.maps.Marker({
+          position: coords,
+          map: map,
+          title:"You are here!"
         });
     }
 
@@ -30,9 +39,6 @@ jQuery(document).ready(function($) {
         positionMarker.setIcon(image);
         positionMarker.setMap(map);
         console.log(map.getCenter())
-        console.log(map.getCenter().toString())
-        console.log(map.getCenter().latitude)
-        console.log(map.getCenter().longitude)
         console.log(map.getCenter().toString())
         map.setCenter(positionMarker.getPosition())
     }
@@ -126,7 +132,7 @@ jQuery(document).ready(function($) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (initPosition) {
             position = initPosition;
-            initMap();
+            initMap(initPosition);
             setupPositionMarker();
             //setup_websocket();
             //startUpdate();
