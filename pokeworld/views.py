@@ -33,7 +33,7 @@ def asdf(request):
     wild_pokemons = parse_wild_pokemon(map_objects)
     broadcast_wild_pokemon(wild_pokemons)
 
-    steps = 5
+    steps = 6
     distance = 150
     degrees = generate_swirl_degrees(steps)
     for i in range(0,steps*steps-1):
