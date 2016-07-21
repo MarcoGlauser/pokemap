@@ -4,6 +4,7 @@ import time
 
 from django.conf import settings
 from django.http import HttpResponse
+from django.http.response import HttpResponseBadRequest
 from django.shortcuts import render
 from geopy import Point
 from geopy.distance import VincentyDistance, GreatCircleDistance
@@ -16,10 +17,10 @@ from ws4redis.redis_store import RedisMessage
 def asdf(request):
     config = settings.PGOAPI_CONFIG
 
-    #position = get_pos_by_name(config['location'])
     if request.GET['latitude'] and request.GET['longitude']:
         position = float(request.GET['latitude']), float(request.GET['longitude']), 0
-
+    else:
+        return HttpResponseBadRequest()
     # instantiate pgoapi
     api = PGoApi()
 

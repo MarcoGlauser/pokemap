@@ -6,18 +6,15 @@ jQuery(document).ready(function($) {
     var positionMarker;
 
     function initMap() {
+        console.log('lat: '+ position.coords.latitude+ ' lng:'+position.coords.longitude)
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: position.coords.latitude, lng: position.coords.longitude},
             zoom: 18
         });
-        setupPositionMarker();
-        setup_websocket();
-        startUpdate();
-        setInterval(startUpdate,30*1000)
     }
 
     function setupPositionMarker(){
-        console.log({position: {lat:position.coords.latitude,lng:position.coords.longitude}})
+        console.log('lat: '+ position.coords.latitude+ ' lng:'+position.coords.longitude)
         positionMarker = new google.maps.Marker({
             position: {lat:position.coords.latitude,lng:position.coords.longitude},
             title: 'You\'re here'
@@ -33,10 +30,10 @@ jQuery(document).ready(function($) {
         positionMarker.setIcon(image);
         positionMarker.setMap(map);
         map.setCenter(positionMarker.getPosition())
-        console.log('set on map')
     }
 
     function updatePositionMarker() {
+        console.log('moved Marker')
         positionMarker.setPosition({lat:position.coords.latitude,lng:position.coords.longitude})
     }
 
@@ -52,8 +49,8 @@ jQuery(document).ready(function($) {
 
 	// receive a message though the Websocket from the server
 	function receiveMessage(msg) {
-        var data = JSON.parse(msg)
-        console.log('[data received]')
+        var data = JSON.parse(msg);
+        console.log('[data received]');
         for(var i = 0; i < data.length;i++){
             var pokemon = data[i];
             if(!pokemons[pokemon.encounter_id]){
@@ -124,12 +121,18 @@ jQuery(document).ready(function($) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (initPosition) {
             position = initPosition;
-            initMap()
-        });
+         });
+
+        initMap();
+        setupPositionMarker();
+        //setup_websocket();
+        //startUpdate();
+        //setInterval(startUpdate,30*1000);
+
         navigator.geolocation.watchPosition(updatePosition);
     }
     else {
-        initMap({coords:{latitude:0,longitude:0}});
+        alert('This map needs Geolocation Access To work!')
     }
 
 });
