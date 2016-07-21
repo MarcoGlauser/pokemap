@@ -14,12 +14,6 @@ jQuery(document).ready(function($) {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map(document.getElementById("map"), options);
-
-        var marker = new google.maps.Marker({
-          position: coords,
-          map: map,
-          title:"You are here!"
-        });
     }
 
     function setupPositionMarker(position){
@@ -134,9 +128,9 @@ jQuery(document).ready(function($) {
             position = initPosition;
             initMap(initPosition);
             setupPositionMarker(initPosition);
-            //setup_websocket();
-            //startUpdate();
-            //setInterval(startUpdate,30*1000);
+            setup_websocket();
+            startUpdate();
+            setInterval(startUpdate,30*1000);
          });
 
 
