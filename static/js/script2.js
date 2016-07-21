@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
         var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
         var options = {
-            zoom: 17,
+            zoom: 18,
             center: coords,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
