@@ -17,7 +17,6 @@ jQuery(document).ready(function($) {
     }
 
     function setupPositionMarker(position){
-        console.log('lat: '+ position.coords.latitude+ ' lng:'+position.coords.longitude)
         positionMarker = new google.maps.Marker({
             position: {lat:position.coords.latitude,lng:position.coords.longitude},
             title: 'You\'re here'
@@ -31,10 +30,6 @@ jQuery(document).ready(function($) {
         };
 
         positionMarker.setIcon(image);
-        positionMarker.setMap(map);
-        console.log(map.getCenter())
-        console.log(map.getCenter().toString())
-        map.setCenter(positionMarker.getPosition())
     }
 
     function updatePositionMarker() {
@@ -132,7 +127,6 @@ jQuery(document).ready(function($) {
             startUpdate();
             setInterval(startUpdate,30*1000);
          });
-
 
 
         navigator.geolocation.watchPosition(updatePosition);
