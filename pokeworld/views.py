@@ -28,7 +28,7 @@ def asdf(request):
     api.set_position(*position)
 
     if not api.login(config['auth_service'], config['username'], config['password']):
-        return
+        return HttpResponse('Unauthorized', status=401)
 
     map_objects = get_map_objects_call(api,position)
     wild_pokemons = parse_wild_pokemon(map_objects)

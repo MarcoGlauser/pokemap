@@ -30,6 +30,7 @@ jQuery(document).ready(function($) {
         };
 
         positionMarker.setIcon(image);
+        positionMarker.setMap(map)
     }
 
     function updatePositionMarker() {
@@ -126,10 +127,8 @@ jQuery(document).ready(function($) {
             setup_websocket();
             startUpdate();
             setInterval(startUpdate,30*1000);
+            navigator.geolocation.watchPosition(updatePosition);
          });
-
-
-        navigator.geolocation.watchPosition(updatePosition);
     }
     else {
         alert('This map needs Geolocation Access To work!')
