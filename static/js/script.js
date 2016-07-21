@@ -10,8 +10,10 @@ jQuery(document).ready(function($) {
             zoom: 18
         });
         setup_websocket();
-        startUpdate();
-        setInterval(startUpdate,20*1000)
+        startUpdate(position);
+        /*setInterval(function (position) {
+            startUpdate(position)
+        },30*1000)*/
     }
 
     function setup_websocket() {
@@ -81,15 +83,17 @@ jQuery(document).ready(function($) {
         marker = null;
     }
 
-    function startUpdate(){
-        random_component = Math.floor((Math.random() * 10*1000) + 1);
+    function startUpdate(position){
+        random_component = Math.floor((Math.random() * 20*1000));
         setTimeout(function () {
-            $.ajax('/pokeworld/test/?latitude=position.coords.latitude&longitude=position.coords.longitude')
+            $.ajax('/pokeworld/test/?latitude='+position.coords.latitude+'&longitude='+position.coords.longitude)
         },random_component)
     }
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(initMap)
+        navigator.geolocation.getCurrentPosition(function (position) {
+            initMap(position)
+        })
     }
     else {
         initMap({coords:{latitude:0,longitude:0}});
