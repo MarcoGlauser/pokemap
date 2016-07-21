@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
     function initMap() {
         console.log('lat: '+ position.coords.latitude+ ' lng:'+position.coords.longitude)
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: position.coords.latitude, lng: position.coords.longitude},
+            center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
             zoom: 18
         });
     }
@@ -29,6 +29,7 @@ jQuery(document).ready(function($) {
 
         positionMarker.setIcon(image);
         positionMarker.setMap(map);
+        console.log(maps.getCenter())
         map.setCenter(positionMarker.getPosition())
     }
 
