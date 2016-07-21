@@ -17,7 +17,9 @@ def asdf(request):
     config = settings.PGOAPI_CONFIG
 
     #position = get_pos_by_name(config['location'])
-    position = -16.918469, 145.780691, 0
+    if request.GET['latitude'] and request.GET['longitude']:
+        position = float(request.GET['latitude']), float(request.GET['longitude']), 0
+
     # instantiate pgoapi
     api = PGoApi()
 
@@ -41,7 +43,6 @@ def asdf(request):
         map_objects = get_map_objects_call(api,position)
         wild_pokemons = parse_wild_pokemon(map_objects)
         broadcast_wild_pokemon(wild_pokemons)
-        time.sleep(2)
 
     return HttpResponse(json.dumps(wild_pokemons))
 
