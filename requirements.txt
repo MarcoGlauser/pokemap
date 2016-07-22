@@ -18,3 +18,5 @@ sqlparse==0.1.19
 uWSGI==2.0.13.1
 whitenoise==3.2
 wsaccel==0.6.2
+dj-database-url
+psycopg2

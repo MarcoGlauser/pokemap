@@ -9,3 +9,14 @@ WS4REDIS_CONNECTION = {
     'port': 6379,
     'db': 5,
 }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pokemap',
+        'USER': 'postgres',
+        'PASSWORD': '12345',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    }
+}
