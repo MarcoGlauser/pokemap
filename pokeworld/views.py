@@ -4,6 +4,7 @@ import time
 
 import requests
 from django.conf import settings
+from django.db import transaction
 from django.http import HttpResponse
 from django.http.response import HttpResponseBadRequest
 from django.shortcuts import render
@@ -75,11 +76,12 @@ def parse_wild_pokemon(response_dict):
 
 def format_wild_pokemon(pokemon_instance):
     pokemon_number = pokemon_instance['pokemon_data']['pokemon_id']
-    try:
-        pokemon_base = Pokemon.objects.get(number=pokemon_number)
-    except Pokemon.DoesNotExist:
-        data = fetch_pokemon_from_api(pokemon_number)
-        pokemon_base = Pokemon.objects.create(number=pokemon_number,name=data['name'])
+    with transaction.atomic():
+        try:
+            pokemon_base = Pokemon.objects.get(number=pokemon_number)
+        except Pokemon.DoesNotExist:
+            data = fetch_pokemon_from_api(pokemon_number)
+            pokemon_base = Pokemon.objects.create(number=pokemon_number,name=data['name'])
     return {
         'runaway_timestamp': pokemon_instance['last_modified_timestamp_ms'] + pokemon_instance['time_till_hidden_ms'],
         'latitude': pokemon_instance['latitude'],
