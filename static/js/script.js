@@ -75,7 +75,7 @@ jQuery(document).ready(function($) {
         });
         marker.setMap(map);
 
-        var spriteUrl = '/static/images/pokemon/'+ data.pokemon_name + '.png';
+        var spriteUrl = '/static/images/pokemon/'+ data.pokemon_name + '_40_copy.png';
         loadImage(spriteUrl,function (data_url,size) {
             var image = {
                 url: data_url,
@@ -123,6 +123,8 @@ jQuery(document).ready(function($) {
     }
 
     if (navigator.geolocation) {
+
+        localStorage.clear();
         setInterval(garbageCollection,1000);
         navigator.geolocation.getCurrentPosition(function (initPosition) {
 

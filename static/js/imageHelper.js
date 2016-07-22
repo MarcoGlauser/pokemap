@@ -2,7 +2,6 @@
 function loadImage(url,callback){
     var image_data = localStorage.getItem("image_data_" + url);
     var image_size = localStorage.getItem("image_size_" + url);
-
     if(image_data && image_size){
         callback(image_data,JSON.parse(image_size))
     }
@@ -23,9 +22,7 @@ function getDataUri(url, callback) {
         canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
         canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
 
-        var context=canvas.getContext("2d");
-        var scale = 0.3;
-        context.drawImage(this, 0, 0,this.naturalWidth*scale,this.naturalHeight*scale);
+        canvas.getContext('2d').drawImage(this, 0, 0);
         callback(canvas.toDataURL('image/png'),{width:canvas.width,height:canvas.height});
     };
 
