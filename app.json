@@ -10,13 +10,14 @@
     "PGOAPI_AUTH_SERVICE":{
       "description": "Authentication Method with the pokemon server. Either ptc or google"
     },
-    "PGOAPI_PASSWORD":{
-      "description": "Password for ptc or google depending on PGOAPI_AUTH_SERVICE"
-    },
     "PGOAPI_USERNAME":{
       "description": "Username for ptc or google depending on PGOAPI_AUTH_SERVICE"
     },
+    "PGOAPI_PASSWORD":{
+      "description": "Password for ptc or google depending on PGOAPI_AUTH_SERVICE"
+    },
     "DJANGO_SETTINGS_MODULE":{
+      "description": "Don't change this",
       "value": "pokemap.settings.production"
     }
   },
