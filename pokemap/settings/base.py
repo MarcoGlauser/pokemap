@@ -134,6 +134,8 @@ NUMBER_OF_STEPS = 6
 # Meters between steps.
 STEP_DISTANCE = 150
 
+#TODO IMPLEMENT STEP CONFIG
+
 INTERNAL_IPS = ['127.0.0.1',]
 
 WSGI_APPLICATION = 'ws4redis.django_runserver.application'
