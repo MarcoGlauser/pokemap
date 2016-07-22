@@ -72,16 +72,20 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 console.log('Received Data for #' + id + ' ' + response.name)
                 marker.setTitle(response.name);
-                spriteUrl = response.sprites.front_default.replace(/^http:\/\//i, 'https://');
-                var image = {
-                    url: spriteUrl,
-                    // This marker is 20 pixels wide by 32 pixels high.
-                    size: new google.maps.Size(96, 96),
-                    // The anchor for this image is the base of the flagpole at (0, 32).
-                    anchor: new google.maps.Point(48, 48)
-                };
+                var spriteUrl = response.sprites.front_default.replace(/^http:\/\//i, 'https://');
 
-                marker.setIcon(image);
+                loadImage(spriteUrl,function (data_url) {
+                    var image = {
+                        url: data_url,
+                        // This marker is 20 pixels wide by 32 pixels high.
+                        size: new google.maps.Size(96, 96),
+                        // The anchor for this image is the base of the flagpole at (0, 32).
+                        anchor: new google.maps.Point(48, 48)
+                    };
+
+                    marker.setIcon(image);
+                })
+
             }
         });
     }
@@ -121,6 +125,7 @@ jQuery(document).ready(function($) {
     }
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (initPosition) {
+
             position = initPosition;
             initMap(initPosition);
             setupPositionMarker(initPosition);
@@ -131,7 +136,7 @@ jQuery(document).ready(function($) {
          });
     }
     else {
-        alert('This map needs Geolocation Access To work!')
+        alert('This map needs Geolocation Access To work!');
     }
 
 });
