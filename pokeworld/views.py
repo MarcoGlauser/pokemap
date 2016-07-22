@@ -2,6 +2,8 @@ import json
 
 import time
 
+import struct
+
 import requests
 from django.conf import settings
 from django.db import transaction
@@ -10,9 +12,9 @@ from django.http.response import HttpResponseBadRequest
 from django.shortcuts import render
 from geopy import Point
 from geopy.distance import VincentyDistance, GreatCircleDistance
-from pgoapi.pgoapi import PGoApi, f2i
+from pgoapi import PGoApi
 from pokeworld.models import Pokemon
-from pokeworld.tasks import get_pos_by_name, get_cellid
+from pokeworld.tasks import get_pos_by_name, get_cellid, get_cell_ids
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
@@ -48,14 +50,15 @@ def asdf(request):
         wild_pokemons = parse_wild_pokemon(map_objects)
         broadcast_wild_pokemon(wild_pokemons)
 
-    return HttpResponse(json.dumps(wild_pokemons))
+    return HttpResponse()
 
 
 def get_map_objects_call(api,position):
-    timestamp = "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"
-    cellid = get_cellid(position[0], position[1])
+
+    cell_ids = get_cell_ids(position[0], position[1])
+    timestamps = [0, ] * len(cell_ids)
     api.set_position(position[0],position[1],0)
-    api.get_map_objects(latitude=f2i(position[0]), longitude=f2i(position[1]), since_timestamp_ms=timestamp, cell_id=cellid)
+    api.get_map_objects(latitude=f2i(position[0]), longitude=f2i(position[1]), since_timestamp_ms=timestamps, cell_id=cell_ids)
     return api.call()
 
 def broadcast_wild_pokemon(wild_pokemons):
@@ -65,12 +68,13 @@ def broadcast_wild_pokemon(wild_pokemons):
 
 def parse_wild_pokemon(response_dict):
     wild_pokemons = []
-    for s2_cell in response_dict['responses']['GET_MAP_OBJECTS']['map_cells']:
-        if s2_cell.get('wild_pokemons'):
-            print ('Wild Pokemon found!')
-            for wild_pokemon in s2_cell.get('wild_pokemons'):
-                print '#' + str(wild_pokemon['pokemon_data']['pokemon_id'])
-                wild_pokemons.append(format_wild_pokemon(wild_pokemon))
+    if response_dict['responses']['GET_MAP_OBJECTS'].get('map_cells'):
+        for s2_cell in response_dict['responses']['GET_MAP_OBJECTS']['map_cells']:
+            if s2_cell.get('wild_pokemons'):
+                print ('Wild Pokemon found!')
+                for wild_pokemon in s2_cell.get('wild_pokemons'):
+                    print '#' + str(wild_pokemon['pokemon_data']['pokemon_id'])
+                    wild_pokemons.append(format_wild_pokemon(wild_pokemon))
 
     return wild_pokemons
 
@@ -94,6 +98,9 @@ def format_wild_pokemon(pokemon_instance):
 def fetch_pokemon_from_api(number):
     response = requests.get('https://pokeapi.co/api/v2/pokemon/'+ str(number) +'/')
     return response.json()
+
+def f2i(float):
+  return struct.unpack('<Q', struct.pack('<d', float))[0]
 
 def generate_swirl_degrees(steps):
     squares = []
