@@ -1,20 +1,16 @@
 import json
-
-import time
-
 import struct
 
 import requests
 from django.conf import settings
-from django.db import transaction
+from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.http.response import HttpResponseBadRequest
-from django.shortcuts import render
 from geopy import Point
-from geopy.distance import VincentyDistance, GreatCircleDistance
+from geopy.distance import GreatCircleDistance
 from pgoapi import PGoApi
 from pokeworld.models import Pokemon
-from pokeworld.tasks import get_pos_by_name, get_cellid, get_cell_ids
+from pokeworld.tasks import get_cell_ids
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
@@ -80,19 +76,25 @@ def parse_wild_pokemon(response_dict):
 
 def format_wild_pokemon(pokemon_instance):
     pokemon_number = pokemon_instance['pokemon_data']['pokemon_id']
-    with transaction.atomic():
+    pokemon_name = ''
+    try:
+        pokemon_base = Pokemon.objects.get(number=pokemon_number)
+        pokemon_name = pokemon_base.name
+    except Pokemon.DoesNotExist:
+        data = fetch_pokemon_from_api(pokemon_number)
+        pokemon_name = data['name']
         try:
-            pokemon_base = Pokemon.objects.get(number=pokemon_number)
-        except Pokemon.DoesNotExist:
-            data = fetch_pokemon_from_api(pokemon_number)
-            pokemon_base = Pokemon.objects.create(number=pokemon_number,name=data['name'])
+            Pokemon.objects.create(number=pokemon_number,name=data['name'])
+        except IntegrityError:
+            pass
+
     return {
         'runaway_timestamp': pokemon_instance['last_modified_timestamp_ms'] + pokemon_instance['time_till_hidden_ms'],
         'latitude': pokemon_instance['latitude'],
         'longitude': pokemon_instance['longitude'],
         'id': pokemon_instance['encounter_id'],
         'pokemon_number': pokemon_number,
-        'pokemon_name': pokemon_base.name
+        'pokemon_name': pokemon_name
     }
 
 def fetch_pokemon_from_api(number):
