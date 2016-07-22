@@ -57,7 +57,7 @@ jQuery(document).ready(function($) {
             if(!pokemons[pokemon.id]){
                 var marker = addMarker(pokemon);
                 pokemons[pokemon.id] = {
-                    removal_time : pokemon.runaway_timestamp,
+                    runaway_timestamp : pokemon.runaway_timestamp,
                     marker : marker,
                     pokemon :pokemon
                 }
@@ -112,11 +112,12 @@ jQuery(document).ready(function($) {
     }
 
     function garbageCollection() {
-        var now = Date.now()
+        var now = Date.now();
         for (var prop in pokemons) {
             var pokemon_entry = pokemons[prop];
             if(now > pokemon_entry.runaway_timestamp) {
                 removeMarker(pokemon_entry.marker, pokemon_entry.pokemon)
+                delete pokemons[prop]
             }
         }
     }
