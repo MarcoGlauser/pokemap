@@ -99,7 +99,7 @@ jQuery(document).ready(function($) {
     function startUpdate(){
         random_component = Math.floor((Math.random() * 20*1000));
         setTimeout(function () {
-            $.ajax('/pokeworld/test/?latitude='+position.coords.latitude+'&longitude='+position.coords.longitude)
+            $.ajax('/pokeworld/scan/?latitude='+position.coords.latitude+'&longitude='+position.coords.longitude)
         },random_component)
     }
 
