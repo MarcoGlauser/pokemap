@@ -46,24 +46,25 @@ jQuery(document).ready(function($) {
         });
     }
 
-    //ws4redis.send_message($('#text_message').val());
-
 	// receive a message though the Websocket from the server
 	function receiveMessage(msg) {
         var data = JSON.parse(msg);
         console.log('[data received]');
         for(var i = 0; i < data.length;i++){
             var pokemon = data[i];
-            if(!pokemons[pokemon.id]){
-                var marker = addMarker(pokemon);
-                pokemons[pokemon.id] = {
-                    runaway_timestamp : pokemon.runaway_timestamp,
-                    marker : marker,
-                    pokemon :pokemon
+            if(Date.now() < pokemon.runaway_timestamp) {
+                if (!pokemons[pokemon.id]) {
+                    var marker = addMarker(pokemon);
+                    pokemons[pokemon.id] = {
+                        runaway_timestamp: pokemon.runaway_timestamp,
+                        marker: marker,
+                        pokemon: pokemon
+                    }
                 }
-            }
-            else{
-                console.log('duplicate received')
+
+                else {
+                    console.log('duplicate received')
+                }
             }
         }
 	}
@@ -97,10 +98,7 @@ jQuery(document).ready(function($) {
     }
 
     function startUpdate(){
-        random_component = Math.floor((Math.random() * 20*1000));
-        setTimeout(function () {
-            $.ajax('/pokeworld/scan/?latitude='+position.coords.latitude+'&longitude='+position.coords.longitude)
-        },random_component)
+        $.ajax('/pokeworld/scan/?latitude='+position.coords.latitude+'&longitude='+position.coords.longitude)
     }
 
     function updatePosition(new_position) {
@@ -124,7 +122,6 @@ jQuery(document).ready(function($) {
 
     if (navigator.geolocation) {
 
-        localStorage.clear();
         setInterval(garbageCollection,1000);
         navigator.geolocation.getCurrentPosition(function (initPosition) {
 

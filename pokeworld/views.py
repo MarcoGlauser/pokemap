@@ -64,19 +64,17 @@ def broadcast_wild_pokemon(wild_pokemons):
 
 def parse_wild_pokemon(response_dict):
     wild_pokemons = []
-    if response_dict['responses']['GET_MAP_OBJECTS'].get('map_cells'):
+    if response_dict['responses'].get('GET_MAP_OBJECTS') and response_dict['responses']['GET_MAP_OBJECTS'].get('map_cells'):
         for s2_cell in response_dict['responses']['GET_MAP_OBJECTS']['map_cells']:
             if s2_cell.get('wild_pokemons'):
-                print ('Wild Pokemon found!')
+                print (str(len(s2_cell.get('wild_pokemons'))) +' Wild Pokemon found!')
                 for wild_pokemon in s2_cell.get('wild_pokemons'):
-                    print '#' + str(wild_pokemon['pokemon_data']['pokemon_id'])
                     wild_pokemons.append(format_wild_pokemon(wild_pokemon))
 
     return wild_pokemons
 
 def format_wild_pokemon(pokemon_instance):
     pokemon_number = pokemon_instance['pokemon_data']['pokemon_id']
-    pokemon_name = ''
     try:
         pokemon_base = Pokemon.objects.get(number=pokemon_number)
         pokemon_name = pokemon_base.name
