@@ -1,0 +1,27 @@
+{
+  "name": "Yet another Pokemap",
+  "website": "https://github.com/MarcoGlauser/pokemap",
+  "repository": "https://github.com/MarcoGlauser/pokemap",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "python manage.py migrate"
+  },
+  "env": {
+    "PGOAPI_AUTH_SERVICE":{
+      "description": "Authentication Method. Either ptc or google"
+    },
+    "PGOAPI_PASSWORD":{
+      "description": "Password for ptc or google depending on PGOAPI_AUTH_SERVICE"
+    },
+    "PGOAPI_USERNAME":{
+      "description": "Username for ptc or google depending on PGOAPI_AUTH_SERVICE"
+    },
+    "DJANGO_SETTINGS_MODULE":{
+      "description": "pokemap.settings.production"
+    }
+  },
+  "addons": [
+    "heroku-redis",
+    "heroku-postgresql"
+  ]
+}
