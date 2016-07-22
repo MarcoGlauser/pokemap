@@ -54,9 +54,13 @@ jQuery(document).ready(function($) {
         console.log('[data received]');
         for(var i = 0; i < data.length;i++){
             var pokemon = data[i];
-            if(!pokemons[pokemon.encounter_id]){
-                addMarker(pokemon);
-                pokemons[pokemon.encounter_id] = true
+            if(!pokemons[pokemon.id]){
+                var marker = addMarker(pokemon);
+                pokemons[pokemon.id] = {
+                    removal_time : pokemon.runaway_timestamp,
+                    marker : marker,
+                    pokemon :pokemon
+                }
             }
             else{
                 console.log('duplicate received')
@@ -64,47 +68,30 @@ jQuery(document).ready(function($) {
         }
 	}
 
-    function getPokemonData(data,marker){
-        var id = data.pokemon_data.pokemon_id;
-        console.log('Getting Data for #' + id)
-        $.ajax({
-            url:'https://pokeapi.co/api/v2/pokemon/'+ id +'/',
-            success: function (response) {
-                console.log('Received Data for #' + id + ' ' + response.name)
-                marker.setTitle(response.name);
-                var spriteUrl = response.sprites.front_default.replace(/^http:\/\//i, 'https://');
-
-                loadImage(spriteUrl,function (data_url) {
-                    var image = {
-                        url: data_url,
-                        // This marker is 20 pixels wide by 32 pixels high.
-                        size: new google.maps.Size(96, 96),
-                        // The anchor for this image is the base of the flagpole at (0, 32).
-                        anchor: new google.maps.Point(48, 48)
-                    };
-
-                    marker.setIcon(image);
-                })
-
-            }
-        });
-    }
-
     function addMarker(data){
         var marker = new google.maps.Marker({
             position: {lng:data.longitude,lat:data.latitude},
-            title: data.pokemon_data.pokemon_id.toString()
+            title: data.pokemon_name
         });
         marker.setMap(map);
-        setTimeout(function () {
-            removeMarker(data,marker)
-        },data.time_till_hidden_ms);
 
-        getPokemonData(data,marker)
+        var spriteUrl = '/static/images/pokemon/'+ data.pokemon_name + '.png';
+        loadImage(spriteUrl,function (data_url,size) {
+            var image = {
+                url: data_url,
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(size.width, size.height),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(size.width / 2, size.height / 2)
+            };
+
+            marker.setIcon(image);
+        });
+        return marker
     }
 
-    function removeMarker(data,marker){
-        console.log('removed marker for #' + data.pokemon_data.pokemon_id);
+    function removeMarker(marker,pokemon){
+        console.log('removed marker for #' + pokemon.pokemon_name);
         marker.setMap(null);
         marker = null;
     }
@@ -123,7 +110,19 @@ jQuery(document).ready(function($) {
             updatePositionMarker()
         }
     }
+
+    function garbageCollection() {
+        var now = Date.now()
+        for (var prop in pokemons) {
+            var pokemon_entry = pokemons[prop];
+            if(now > pokemon_entry.runaway_timestamp) {
+                removeMarker(pokemon_entry.marker, pokemon_entry.pokemon)
+            }
+        }
+    }
+
     if (navigator.geolocation) {
+        setInterval(garbageCollection,1000);
         navigator.geolocation.getCurrentPosition(function (initPosition) {
 
             position = initPosition;
