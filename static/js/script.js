@@ -121,7 +121,6 @@ jQuery(document).ready(function($) {
     }
 
     if (navigator.geolocation) {
-        localStorage.clear();
         setInterval(garbageCollection,1000);
         navigator.geolocation.getCurrentPosition(function (initPosition) {
 
