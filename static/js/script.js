@@ -157,7 +157,7 @@ jQuery(document).ready(function($) {
             setupPositionMarker(initPosition);
             setup_websocket();
             startUpdate();
-            setInterval(startUpdate,40*1000);
+            setInterval(startUpdate,30*1000);
             navigator.geolocation.watchPosition(updatePosition);
          });
     }
