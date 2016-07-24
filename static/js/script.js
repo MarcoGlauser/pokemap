@@ -122,7 +122,7 @@ jQuery(document).ready(function($) {
                 if(dot_count >3){
                     dot_count = 0;
                 }
-                var text = 'Updating';
+                var text = 'Scanning';
                 for(var i = 0; i < dot_count;i++){
                     text += '.'
                 }
