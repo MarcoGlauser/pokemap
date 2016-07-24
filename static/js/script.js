@@ -4,16 +4,20 @@ jQuery(document).ready(function($) {
     var pokemons = {};
     var position = {};
     var positionMarker;
+    var last_update = null;
+    var dot_count = 0;
 
     function initMap(position) {
         var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
+        var controlDiv =$("#control-div");
         var options = {
             zoom: 17,
             center: coords,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map(document.getElementById("map"), options);
+        controlDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlDiv[0]);
     }
 
     function setupPositionMarker(position){
@@ -49,6 +53,7 @@ jQuery(document).ready(function($) {
 	// receive a message though the Websocket from the server
 	function receiveMessage(msg) {
         var data = JSON.parse(msg);
+        last_update = Date.now();
         console.log('[data received]');
         for(var i = 0; i < data.length;i++){
             var pokemon = data[i];
@@ -111,6 +116,29 @@ jQuery(document).ready(function($) {
 
     function garbageCollection() {
         var now = Date.now();
+        if(last_update){
+            var seconds_ago = Math.floor((now - last_update)/1000);
+            if(seconds_ago < 1){
+                if(dot_count >3){
+                    dot_count = 0;
+                }
+                var text = 'Updating';
+                for(var i = 0; i < dot_count;i++){
+                    text += '.'
+                }
+                dot_count++;
+            }
+            else {
+                dot_count = 0;
+                var text = 'Last update was ' + seconds_ago.toString() + ' seconds ago';
+            }
+        }
+        else{
+            var text = 'No Update yet'
+            dot_count = 0;
+        }
+        $('#last_update').text(text)
+
         for (var prop in pokemons) {
             var pokemon_entry = pokemons[prop];
             if(now > pokemon_entry.runaway_timestamp) {
@@ -129,7 +157,7 @@ jQuery(document).ready(function($) {
             setupPositionMarker(initPosition);
             setup_websocket();
             startUpdate();
-            setInterval(startUpdate,30*1000);
+            setInterval(startUpdate,40*1000);
             navigator.geolocation.watchPosition(updatePosition);
          });
     }
