@@ -35,8 +35,8 @@ def asdf(request):
     wild_pokemons = parse_wild_pokemon(map_objects)
     broadcast_wild_pokemon(wild_pokemons)
 
-    steps = 5
-    distance = 150
+    steps = 6
+    distance = 130
     degrees = generate_swirl_degrees(steps)
     for i in range(0,steps*steps-1):
         print ('-----------------------')
@@ -50,7 +50,6 @@ def asdf(request):
 
 
 def get_map_objects_call(api,position):
-
     cell_ids = get_cell_ids(position[0], position[1])
     timestamps = [0, ] * len(cell_ids)
     api.set_position(position[0],position[1],0)
