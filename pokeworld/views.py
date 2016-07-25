@@ -22,10 +22,8 @@ def asdf(request):
         position = float(request.GET['latitude']), float(request.GET['longitude']), 0
     else:
         return HttpResponseBadRequest()
-    # instantiate pgoapi
     api = PGoApi()
 
-    # provide player position on the earth
     api.set_position(*position)
 
     if not api.login(config['auth_service'], config['username'], config['password']):
@@ -35,7 +33,7 @@ def asdf(request):
     wild_pokemons = parse_wild_pokemon(map_objects)
     broadcast_wild_pokemon(wild_pokemons)
 
-    steps = 6
+    steps = 7
     distance = 130
     degrees = generate_swirl_degrees(steps)
     for i in range(0,steps*steps-1):
