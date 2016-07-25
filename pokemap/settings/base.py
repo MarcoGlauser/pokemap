@@ -138,3 +138,5 @@ STEP_DISTANCE = 130
 INTERNAL_IPS = ['127.0.0.1',]
 
 WSGI_APPLICATION = 'ws4redis.django_runserver.application'
+
+CELERY_TASK_SERIALIZER='json'
