@@ -1,8 +1,8 @@
+import dj_database_url
 import re
 from base import *
-import dj_database_url
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -29,6 +29,8 @@ WS4REDIS_CONNECTION = {
     'db': 1,
 }
 
+BROKER_URL = os.environ['REDIS_URL'] + '/2',
+CELERY_RESULT_BACKEND = os.environ['REDIS_URL']+ '/2'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'

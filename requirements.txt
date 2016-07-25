@@ -1,3 +1,8 @@
+amqp==1.4.9
+anyjson==0.3.3
+billiard==3.3.0.23
+celery==3.1.23
+dj-database-url==0.4.1
 Django==1.9.8
 django-debug-toolbar==1.4
 django-websocket-redis==0.4.6
@@ -7,9 +12,13 @@ gevent==1.1.1
 gpsoauth==0.3.0
 greenlet==0.4.10
 gunicorn==19.6.0
-protobuf>=3.0.0a3
+kombu==3.0.35
+pgoapi==1.1.0
+protobuf==3.0.0b4
 protobuf-to-dict==0.1.0
+psycopg2==2.6.2
 pycryptodomex==3.4.2
+pytz==2016.6.1
 redis==2.10.5
 requests==2.10.0
 s2sphere==0.2.4
@@ -18,6 +27,3 @@ sqlparse==0.1.19
 uWSGI==2.0.13.1
 whitenoise==3.2
 wsaccel==0.6.2
-dj-database-url
-psycopg2
-git+https://github.com/tejado/pgoapi.git

@@ -132,9 +132,8 @@ WS4REDIS_EXPIRE = 5
 # a square of NUMBER_OF_STEPS * NUMBER_OF_STEPS will be walked. This means for 36 API Requests for NUMBER_OF_STEPS = 6
 NUMBER_OF_STEPS = 6
 # Meters between steps.
-STEP_DISTANCE = 150
+STEP_DISTANCE = 130
 
-#TODO IMPLEMENT STEP CONFIG
 
 INTERNAL_IPS = ['127.0.0.1',]
 
