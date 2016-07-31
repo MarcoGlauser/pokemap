@@ -3,16 +3,25 @@ import struct
 
 import requests
 from celery.task import task
+from django.conf import settings
 from django.db import IntegrityError
 from google.protobuf.internal import encoder
-from pgoapi.pgoapi import f2i
+from pgoapi.pgoapi import f2i, PGoApi
 from pokeworld.models import Pokemon
 from s2sphere import CellId, LatLng
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
+
 @task
-def get_map_objects_and_send_to_websocket(pgoapi, position):
+def get_map_objects_and_send_to_websocket(position):
+    config = settings.PGOAPI_CONFIG
+
+    pgoapi = PGoApi()
+    pgoapi.set_position(*position)
+    if not pgoapi.login(config['auth_service'], config['username'], config['password']):
+        return False
+
     map_objects = get_map_objects_call(pgoapi, position)
     wild_pokemons = parse_wild_pokemon(map_objects)
     broadcast_wild_pokemon(wild_pokemons)
